@@ -2,8 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
-import 'package:path/path.dart' as path;
-import 'package:path_provider/path_provider.dart';
 import 'result_screen.dart';
 
 late List<CameraDescription> cameras;
@@ -43,7 +41,8 @@ class _ScanScreenState extends State<ScanScreen> {
   Future<String> _ocrFromFile(File imageFile) async {
     final inputImage = InputImage.fromFile(imageFile);
     final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
-    final RecognizedText recognizedText = await textRecognizer.processImage(inputImage);
+    final RecognizedText recognizedText =
+        await textRecognizer.processImage(inputImage);
     textRecognizer.close();
     return recognizedText.text;
   }
@@ -71,17 +70,34 @@ class _ScanScreenState extends State<ScanScreen> {
       );
     } catch (e) {
       if (!mounted) return;
+      // Ubah pesan error sesuai instruksi soal
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error saat mengambil/memproses foto: $e')),
+        const SnackBar(
+          content: Text("Pemindaian Gagal! Periksa Izin Kamera atau coba lagi."),
+        ),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    // Custom Loading Screen sesuai instruksi soal
     if (!_controller.value.isInitialized) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
+      return Scaffold(
+        backgroundColor: Colors.grey[900],
+        body: const Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(color: Colors.yellow),
+              SizedBox(height: 20),
+              Text(
+                'Memuat Kamera... Harap tunggu.',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+            ],
+          ),
+        ),
       );
     }
 
