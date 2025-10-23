@@ -16,7 +16,7 @@ class ResultScreen extends StatelessWidget {
             ocrText.isEmpty
                 ? 'Tidak ada teks ditemukan.'
                 : ocrText.replaceAll('\n', ' '),
-            style: const TextStyle(fontSize: 18),
+            style: const TextStyle(fontSize: 20),
           ),
         ),
       ),
